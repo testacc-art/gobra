@@ -96,6 +96,12 @@ object SymbolTable extends Environments[Entity] {
   case class MultiLocalVariable(idx: Int, exp: PExpression, ghost: Boolean, addressable: Boolean, context: ExternalTypeInfo) extends ActualVariable {
     override def rep: PNode = exp
   }
+  case class SingleGlobalVariable(exp: Option[PExpression], opt: Option[PType], rep: PNode, ghost: Boolean, addressable: Boolean, context: ExternalTypeInfo) extends ActualVariable {
+    require(exp.isDefined || opt.isDefined)
+  }
+  case class MultiGlobalVariable(idx: Int, exp: PExpression, ghost: Boolean, addressable: Boolean, context: ExternalTypeInfo) extends ActualVariable {
+    override def rep: PNode = exp
+  }
   case class InParameter(decl: PNamedParameter, ghost: Boolean, addressable: Boolean, context: ExternalTypeInfo) extends ActualVariable {
     override def rep: PNode = decl
   }

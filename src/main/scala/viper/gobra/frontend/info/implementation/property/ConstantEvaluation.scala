@@ -8,7 +8,7 @@ package viper.gobra.frontend.info.implementation.property
 
 import viper.gobra.ast.frontend.{AstPattern => ap, _}
 import viper.gobra.frontend.info.base.SymbolTable.SingleConstant
-import viper.gobra.frontend.info.base.Type.{BooleanT, IntT}
+import viper.gobra.frontend.info.base.Type.{BooleanT, IntT, StringT}
 import viper.gobra.frontend.info.implementation.TypeInfoImpl
 import viper.gobra.util.TypeBounds._
 import viper.gobra.util.Violation.violation
@@ -145,6 +145,10 @@ trait ConstantEvaluation { this: TypeInfoImpl =>
       }
       case PDot(_, id) => entity(id) match {
         case SingleConstant(_, _, exp, _, _, _) => intConstantEval(exp)
+        case _ => None
+      }
+      case PLength(exp) => underlyingType(exprOrTypeType(exp)) match {
+        case StringT => for { s <- stringConstantEval(exp) } yield s.length
         case _ => None
       }
 

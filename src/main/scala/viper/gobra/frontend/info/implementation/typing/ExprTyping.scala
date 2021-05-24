@@ -284,7 +284,7 @@ trait ExprTyping extends BaseTyping { this: TypeInfoImpl =>
       low.fold(noMessages)(isExpr(_).out) ++
       high.fold(noMessages)(isExpr(_).out) ++
       cap.fold(noMessages)(isExpr(_).out) ++
-      ((exprType(base), low map exprType, high map exprType, cap map exprType) match {
+      ((underlyingType(exprType(base)), low map exprType, high map exprType, cap map exprType) match {
         case (ArrayT(l, _), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) =>
           val (lowOpt, highOpt, capOpt) = (low map intConstantEval, high map intConstantEval, cap map intConstantEval)
           error(n, s"index $low is out of bounds", !lowOpt.forall(_.forall(i => 0 <= i && i <= l))) ++
@@ -406,7 +406,7 @@ trait ExprTyping extends BaseTyping { this: TypeInfoImpl =>
         resolve(n.pred.pred).exists(_.isInstanceOf[ap.PredExprInstance]))
 
     case PLength(op) => isExpr(op).out ++ {
-      exprType(op) match {
+      underlyingType(exprType(op)) match {
         case _: ArrayT | _: SliceT | _: GhostSliceT | StringT | _: VariadicT | _: MapT | _: MathMapT => noMessages
         case _: SequenceT | _: SetT | _: MultisetT => isPureExpr(op)
         case typ => error(op, s"expected an array, string, sequence or slice type, but got $typ")
@@ -548,6 +548,7 @@ trait ExprTyping extends BaseTyping { this: TypeInfoImpl =>
       case p => violation(s"expected conversion, function call, predicate call, or predicate expression instance, but got $p")
     }
 
+    // TODO: also adapt this (?)
     case PIndexedExp(base, index) => (exprType(base), exprType(index)) match {
       case (ArrayT(_, elem), IntT(_)) => elem
       case (PointerT(ArrayT(_, elem)), IntT(_)) => elem
@@ -562,14 +563,16 @@ trait ExprTyping extends BaseTyping { this: TypeInfoImpl =>
       case (bt, it) => violation(s"$it is not a valid index for the the base $bt")
     }
 
-    case PSliceExp(base, low, high, cap) => (exprType(base), low map exprType, high map exprType, cap map exprType) match {
-      case (ArrayT(_, elem), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) if addressable(base) => SliceT(elem)
-      case (PointerT(ArrayT(_, elem)), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) => SliceT(elem)
-      case (SequenceT(elem), None | Some(IntT(_)), None | Some(IntT(_)), None) => SequenceT(elem)
-      case (SliceT(elem), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) => SliceT(elem)
-      case (GhostSliceT(elem), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) => GhostSliceT(elem)
-      case (bt, lt, ht, ct) => violation(s"invalid slice with base $bt and indexes $lt, $ht, and $ct")
-    }
+    case PSliceExp(base, low, high, cap) =>
+      // TODO: change return types to be of the type of base
+      (underlyingType(exprType(base)), low map exprType, high map exprType, cap map exprType) match {
+        case (ArrayT(_, elem), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) if addressable(base) => SliceT(elem)
+        case (PointerT(ArrayT(_, elem)), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) => SliceT(elem)
+        case (SequenceT(elem), None | Some(IntT(_)), None | Some(IntT(_)), None) => SequenceT(elem)
+        case (SliceT(elem), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) => SliceT(elem)
+        case (GhostSliceT(elem), None | Some(IntT(_)), None | Some(IntT(_)), None | Some(IntT(_))) => GhostSliceT(elem)
+        case (bt, lt, ht, ct) => violation(s"invalid slice with base $bt and indexes $lt, $ht, and $ct")
+      }
 
     case PTypeAssertion(_, typ) =>
       val resT = typeSymbType(typ)
@@ -895,7 +898,7 @@ trait ExprTyping extends BaseTyping { this: TypeInfoImpl =>
   }
 
   private[typing] def typeOfPLength(expr: PLength): Type =
-    exprType(expr.exp) match {
+    underlyingType(exprType(expr.exp)) match {
       case _: ArrayT | _: SliceT | _: GhostSliceT | StringT | _: VariadicT | _: MapT => INT_TYPE
       case _: SequenceT | _: SetT | _: MultisetT | _: MathMapT => UNTYPED_INT_CONST
       case t => violation(s"unexpected argument ${expr.exp} of type $t passed to len")

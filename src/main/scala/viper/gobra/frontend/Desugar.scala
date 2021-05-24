@@ -949,6 +949,19 @@ object Desugar {
               })
             } else { violation("invalid declaration") }
 
+          case decl@ PConstDecl(typOpt, right, left) =>
+            violation(left.size == right.size, s"number of identifiers does not match the number of expressions in $decl")
+            seqn(sequence((left zip right).map{ case (l, r) =>
+              for {
+                re <- goE(r)
+                typ = typOpt.map {
+                  x => typeD(info.symbType(x), Addressability.constant)(src)
+                }.getOrElse(re.typ.withAddressability(Addressability.constant))
+                dL <- leftOfAssignmentD(l)(typ) // TODO change
+                le <- unit(in.Assignee.Var(dL)) // TODO change
+              } yield singleAss(le, re)(src) // TODO
+            }).map(in.Seqn(_)(src)))
+
           case PReturn(exps) =>
             for{es <- sequence(exps map goE)} yield ctx.ret(es)(src)
 
@@ -1569,7 +1582,7 @@ object Desugar {
             dlow <- option(low map go)
             dhigh <- option(high map go)
             dcap <- option(cap map go)
-          } yield dbase.typ match {
+          } yield underlyingType(dbase.typ) match {
             case _: in.SequenceT => (dlow, dhigh) match {
               case (None, None) => dbase
               case (Some(lo), None) => in.SequenceDrop(dbase, lo)(src)
