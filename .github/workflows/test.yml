@@ -85,8 +85,8 @@ jobs:
 
       - name: Execute all tests
         run: |
-          java -XshowSettings:vm 
           sbt test
+          java -XshowSettings:vm 
         working-directory: gobra
         env:
           _JAVA_OPTIONS: "-Xmx2g"
