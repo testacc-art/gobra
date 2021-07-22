@@ -89,4 +89,4 @@ jobs:
           java -XshowSettings:vm 
         working-directory: gobra
         env:
-          _JAVA_OPTIONS: "-Xmx2g"
+          _JAVA_OPTIONS: "-Xmx2g -XX:+UseG1GC"
