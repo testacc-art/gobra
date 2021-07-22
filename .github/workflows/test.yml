@@ -70,6 +70,8 @@ jobs:
         run: echo "SBT_OPTS=-Dsbt.global.base=sbt-cache/.sbtboot -Dsbt.boot.directory=sbt-cache/.boot -Dsbt.ivy.home=sbt-cache/.ivy" >> $GITHUB_ENV
         # note that the cache path is relative to the directory in which sbt is invoked.
 
+      - name: check ram
+        run: free -m
       - name: Cache SBT
         uses: actions/cache@v2
         with:
@@ -82,7 +84,8 @@ jobs:
           # like sbt is unable to correctly compute source files that require a recompilation. Therefore, we have
           # disabled caching of compiled source files altogether
           key: ${{ runner.os }}-sbt-no-precompiled-sources-${{ hashFiles('**/build.sbt') }}
-
+      - name: check ram
+        run: free -m
       - name: Execute all tests
         run: |
           sbt test
@@ -91,3 +94,6 @@ jobs:
         env:
 #           _JAVA_OPTIONS: "-Xmx4g -XX:+UseG1GC"
           SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xmx2G -Xms1G -XX:+UseG1GC"
+      - name: check ram
+        if: always()
+        run: free -m
