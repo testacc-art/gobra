@@ -44,7 +44,7 @@ jobs:
           ref: ${{ env.CARBON_REF }}
           path: carbon
 
-      - name: Java Version
+      - name: Java Version 
         run: java --version
       - name: Z3 Version
         run: z3 -version
