@@ -91,8 +91,8 @@ jobs:
           sbt test
         working-directory: gobra
         env:
-#           _JAVA_OPTIONS: "-Xmx4g -XX:+UseG1GC"
-          SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xmx2G -Xms1G -XX:+UseG1GC -Xms2G"
+          _JAVA_OPTIONS: "-Xmx6g -Xms2G -XX:+UseG1GC"
+#           SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xmx2G -Xms1G -XX:+UseG1GC -Xms2G"
       - name: check ram
         if: always()
         run: free -m
