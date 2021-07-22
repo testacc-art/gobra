@@ -90,4 +90,4 @@ jobs:
         working-directory: gobra
         env:
 #           _JAVA_OPTIONS: "-Xmx4g -XX:+UseG1GC"
-          SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xmx2G -Xms1G"
+          SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xmx2G -Xms1G -XX:+UseG1GC"
