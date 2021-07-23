@@ -84,7 +84,7 @@ jobs:
           # like sbt is unable to correctly compute source files that require a recompilation. Therefore, we have
           # disabled caching of compiled source files altogether
           key: ${{ runner.os }}-sbt-no-precompiled-sources-${{ hashFiles('**/build.sbt') }}
-      - name: check ram
+      - name: check ram 
         run: free -m
       - name: Execute all tests
         run: |
