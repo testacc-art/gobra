@@ -95,9 +95,9 @@ jobs:
           chmod 600 /swapfile0
           echo "mkswap"
           mkswap /swapfile0
-          swapon /swapfile0
+          sudo swapon /swapfile0
           echo "swapon show"
-          swapon --show
+          sudo swapon --show
           echo "free -h"
           free -h
           echo "df -h"
