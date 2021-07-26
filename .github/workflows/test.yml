@@ -87,6 +87,7 @@ jobs:
       - name: check ram 
         run: free -m
       - name: increase swap
+        shell: bash
         run: |
           echo "fallocate"
           sudo fallocate -l 6G /swapfile0
@@ -101,6 +102,7 @@ jobs:
           free -h
           echo "df -h"
           df -h
+          
       - name: Execute all tests  
         run: |
           sbt test
