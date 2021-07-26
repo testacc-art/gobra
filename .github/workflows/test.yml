@@ -89,6 +89,7 @@ jobs:
       - name: increase swap
         shell: bash
         run: |
+          apt-get install util-linux
           echo "fallocate"
           sudo fallocate -l 6G /swapfile0
           ls -lh /swapfile0
