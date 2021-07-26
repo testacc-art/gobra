@@ -86,10 +86,9 @@ jobs:
           key: ${{ runner.os }}-sbt-no-precompiled-sources-${{ hashFiles('**/build.sbt') }}
       - name: check ram 
         run: free -m
+
       - name: increase swap
-        shell: bash
-        run: |
-          apt-get install util-linux
+        run: | 
           echo "fallocate"
           sudo fallocate -l 6G /swapfile0
           ls -lh /swapfile0
