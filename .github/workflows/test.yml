@@ -90,7 +90,7 @@ jobs:
       - name: increase swap
         run: | 
           echo "fallocate"
-          sudo fallocate -l 6G /swapfile0
+          fallocate -l 6G /swapfile0
           ls -lh /swapfile0
           sudo chmod 600 /swapfile0
           echo "mkswap"
