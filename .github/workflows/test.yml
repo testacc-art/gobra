@@ -19,7 +19,7 @@ jobs:
       SILICON_REF: "v.21.01-release"
       CARBON_REF: "v.21.01-release"
     steps:
-      - name: Checkout Gobra
+      - name: Checkout Gobra 
         uses: actions/checkout@v2
         with:
           path: gobra
