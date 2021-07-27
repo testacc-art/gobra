@@ -44,6 +44,10 @@ jobs:
           ref: ${{ env.CARBON_REF }}
           path: carbon
 
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '11'
       - name: Java Version 
         run: java --version
       - name: Z3 Version
