@@ -76,18 +76,18 @@ jobs:
 
       - name: check ram
         run: free -m
-      - name: Cache SBT 
-        uses: actions/cache@v2
-        with:
-          path: |
-            gobra/sbt-cache/.sbtboot
-            gobra/sbt-cache/.boot
-            gobra/sbt-cache/.ivy/cache
-          # <x>/project/target and <x>/target, where <x> is e.g. 'gobra' or 'silicon', are intentionally not
-          # included as several occurrences of NoSuchMethodError exceptions have been observed during CI runs. It seems
-          # like sbt is unable to correctly compute source files that require a recompilation. Therefore, we have
-          # disabled caching of compiled source files altogether
-          key: ${{ runner.os }}-sbt-no-precompiled-sources-${{ hashFiles('**/build.sbt') }}
+#       - name: Cache SBT 
+#         uses: actions/cache@v2
+#         with:
+#           path: |
+#             gobra/sbt-cache/.sbtboot
+#             gobra/sbt-cache/.boot
+#             gobra/sbt-cache/.ivy/cache
+#           # <x>/project/target and <x>/target, where <x> is e.g. 'gobra' or 'silicon', are intentionally not
+#           # included as several occurrences of NoSuchMethodError exceptions have been observed during CI runs. It seems
+#           # like sbt is unable to correctly compute source files that require a recompilation. Therefore, we have
+#           # disabled caching of compiled source files altogether
+#           key: ${{ runner.os }}-sbt-no-precompiled-sources-${{ hashFiles('**/build.sbt') }}
       - name: check ram 
         run: free -m
           
