@@ -90,22 +90,6 @@ jobs:
           key: ${{ runner.os }}-sbt-no-precompiled-sources-${{ hashFiles('**/build.sbt') }}
       - name: check ram 
         run: free -m
-
-      - name: increase swap
-        run: | 
-          echo "fallocate"
-          fallocate -l 6G /swapfile0
-          ls -lh /swapfile0
-          chmod 600 /swapfile0
-          echo "mkswap"
-          mkswap /swapfile0
-          sudo swapon /swapfile0
-          echo "swapon show"
-          sudo swapon --show
-          echo "free -h"
-          free -h
-          echo "df -h"
-          df -h
           
       - name: Execute all tests  
         run: |
