@@ -62,7 +62,7 @@ jobs:
       - name: Create Carbon's sym links
         run: ln --symbolic ../silver
         working-directory: carbon
-      - name: Create Gobra's sym links
+      - name: Create Gobra's sym links 
         run: ln --symbolic ../silver; ln --symbolic ../silicon; ln --symbolic ../carbon
         working-directory: gobra
 
