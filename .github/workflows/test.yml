@@ -76,7 +76,7 @@ jobs:
 
       - name: check ram
         run: free -m
-      - name: Cache SBT
+      - name: Cache SBT 
         uses: actions/cache@v2
         with:
           path: |
