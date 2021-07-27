@@ -46,8 +46,9 @@ jobs:
 
       - uses: actions/setup-java@v2
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
+          distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '11'
+          check-latest: true
       - name: Java Version 
         run: java --version
       - name: Z3 Version
