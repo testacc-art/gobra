@@ -91,7 +91,7 @@ jobs:
       - name: check ram 
         run: free -m
           
-      - name: Execute all tests  
+      - name: Execute all tests   
         run: |
           sbt test
         working-directory: gobra
